@@ -48,7 +48,7 @@ class BaseAppController {
 
   async getObj(request, reply) {
     try {
-      let data = await this._model.getObj(request.params.id);
+      const data = await this._model.getObjByQuery({ _id: request.params.id, ...request.query });
       if (!data) throw new fastify.errorCodes['NOT_FOUND'](this._model.modelName);
       fastify.okResponse(request, reply, data);
     } catch (err) {
@@ -58,7 +58,7 @@ class BaseAppController {
 
   async updateObj(request, reply) {
     try {
-      let data = await this._model.updateObj({ _id: request.params.id }, request.body);
+      const data = await this._model.updateObjByQuery({ _id: request.params.id, ...request.query }, request.body);
       if (!data) throw new fastify.errorCodes['NOT_FOUND'](this._model.modelName);
       fastify.okResponse(request, reply, data);
     } catch (err) {
@@ -68,7 +68,7 @@ class BaseAppController {
 
   async deleteObj(request, reply) {
     try {
-      let data = await this._model.deleteObj(request.params.id);
+      const data = await this._model.deleteObjByQuery({ _id: request.params.id, ...request.query });
       if (!data) throw new fastify.errorCodes['NOT_FOUND'](this._model.modelName);
       fastify.okResponse(request, reply, data);
     } catch (err) {

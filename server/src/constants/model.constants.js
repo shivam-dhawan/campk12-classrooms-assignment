@@ -6,11 +6,13 @@ const ERROR_TEMPLATES = {
 };
 
 const USER_TYPE_ADMIN = 1;
-const USER_TYPE_USER = 2;
-const USER_TYPE_ENUM = [USER_TYPE_ADMIN, USER_TYPE_USER];
+const USER_TYPE_STUDENT = 2;
+const USER_TYPE_TEACHER = 3;
+const USER_TYPE_ENUM = [USER_TYPE_ADMIN, USER_TYPE_STUDENT, USER_TYPE_TEACHER];
 const USER_TYPE_STR_MAPPER = {
   'admins': 1,
-  'users': 2
+  'students': 2,
+  'teachers': 3
 };
 
 const ADMIN_ROLE_BASIC = 10;
@@ -30,7 +32,8 @@ module.exports = {
   ERROR_TEMPLATES,
 
   USER_TYPE_ADMIN,
-  USER_TYPE_USER,
+  USER_TYPE_STUDENT, 
+  USER_TYPE_TEACHER,
   USER_TYPE_ENUM,
   USER_TYPE_STR_MAPPER,
 

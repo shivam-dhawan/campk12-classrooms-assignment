@@ -166,6 +166,14 @@ const addHelper = function (Schemaa) {
     return data;
   };
 
+  Schemaa.statics.deleteObjByQuery = async function (query) {
+    query._id = query._id || null;
+    let data = await this.deleteOne(query);
+    data = Object.assign({}, data, { success: true });
+    if (data.n === 0) data = undefined;
+    return data;
+  };
+
   Schemaa.statics.getObj = async function (_id) {
     _id = _id || null;
     const data = await getByQuery(this, { _id });

@@ -29,11 +29,6 @@ let fields = {
     set: fastify.hash.hashPassword,
     required: [true, modelConstants.ERROR_TEMPLATES.EMPTY_FIELD.format({ field: 'Password' })]
   },
-  role: {
-    type: Number,
-    enum: modelConstants.ADMIN_ROLE_ENUM,
-    default: modelConstants.ADMIN_ROLE_BASIC
-  },
   isEmailVerified: {
     type: Boolean,
     default: false
@@ -53,14 +48,6 @@ schema.statics.getObjByEmail = async function (email) {
   return data;
 };
 
-schema.statics.checkOrCreateSuperAdmin = async function () {
-  await this.findOneOrCreate({ role: modelConstants.ADMIN_ROLE_SUPER }, {
-    email: process.env.SUPER_ADMIN_EMAIL,
-    password: process.env.SUPER_ADMIN_PASSWORD,
-    role: modelConstants.ADMIN_ROLE_SUPER
-  });
-}
+let StudentModel = Mongoose.model('student', schema);
 
-let AdminModel = Mongoose.model('admin', schema);
-
-module.exports = AdminModel;
+module.exports = StudentModel;
