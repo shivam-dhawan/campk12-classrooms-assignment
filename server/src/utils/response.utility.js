@@ -59,6 +59,39 @@ async function errorResponse(request, reply, error) {
     });
 }
 
+/**
+ * @param paginatedData  Object { Array(result), Integer(totalCount) }
+ */
+async function paginatedResponse(request, reply, paginatedData) {
+  let { result, totalCount } = paginatedData;
+  let prevUrl, nextUrl, url = request.hostname + request.raw.url;
+  let query = request.query;
+  let hasPage = query.page !== undefined;
+
+  query.pageSize = Number(query.pageSize) || fastify.config.PAGE_SIZE;
+  query.page = Number(query.page) || 0;
+
+  let next = totalCount > (query.page * query.pageSize + result.length) ? query.page + 1 : null;
+  let prev = (query.page >= 1) ? query.page - 1 : null;
+
+  if (hasPage) {
+    nextUrl = next === null ? null : url.replace(`page=${query.page}`, `page=${next}`);
+    prevUrl = prev === null ? null : url.replace(`page=${query.page}`, `page=${prev}`);
+  }
+  else {
+    nextUrl = next === null ? null : url + '&page=' + next;
+    prevUrl = prev === null ? null : url + '&page=' + prev;
+  }
+
+  let paginationData = {
+    count: result.length,
+    nextUrl: nextUrl,
+    totalCount,
+    prevUrl: prevUrl
+  }
+  fastify.okResponse(request, reply, result, paginationData);
+}
+
 module.exports = {
-  okResponse, badRequestResponse, errorResponse
+  okResponse, badRequestResponse, errorResponse, paginatedResponse
 };

@@ -5,6 +5,7 @@ const BaseAppController = require('./base.controller.js');
 class StudentController extends BaseAppController {
   constructor(model) {
     super(model);
+    this.getSelfObj = this.getSelfObj.bind(this);
   }
 
   async getSelfObj(request, reply) {

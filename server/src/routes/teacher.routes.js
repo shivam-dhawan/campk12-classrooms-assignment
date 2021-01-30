@@ -15,7 +15,7 @@ const onRequestSuperAdminValidations = [];
 
 module.exports = function (fastify, opts, next) {
 
-  fastify.get('/', { onRequest: onRequestBasicAdminValidations }, teacher.getList);
+  fastify.get('/', { onRequest: onRequestBasicAdminValidations }, teacher.getPaginatedList);
 
   fastify.post('/', { onRequest: onRequestSuperAdminValidations }, teacher.createObj);
 

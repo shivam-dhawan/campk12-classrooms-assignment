@@ -1,6 +1,7 @@
 'use strict';
 
 const parseQuery = require('./queryParser.utility').parseQuery;
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 
 const schemaTranslator = {
   getters: true,
@@ -65,19 +66,6 @@ const processQuery = function (model, query) {
   delete query.orderBy;
   delete query.pageSize;
 
-  /*
-   * let findQuery = {};
-   * if (typeof query == 'string') {
-   *   findQuery = parseQuery(model, query);
-   * } else {
-   *   for (let key in query) {
-   *     if (key == '_id' || key == 'id')
-   *       findQuery['_id'] = fastify.db.mongoose.Types.ObjectId(query[key]);
-   *     findQuery[key] = query[key];
-   *     delete query[key];
-   *   }
-   * }
-   */
   const findQuery = parseQuery(model, (query.findQuery || query));
   validateFilters(model, findQuery);
 
@@ -87,7 +75,7 @@ const processQuery = function (model, query) {
   query.orderBy = orderBy;
   query.pageSize = pageSize;
   query.select = select;
-
+  query.lean = query.lean || false;
 };
 
 const getPaginatedList = async function (model, query) {
@@ -98,6 +86,7 @@ const getPaginatedList = async function (model, query) {
   let dbQuery = model.find(query.findQuery).sort(query.orderBy).select(query.select).skip((query.pageSize * query.page)).limit(query.pageSize);
 
   if (query.populate) dbQuery = dbQuery.populate(...query.populate);
+  if(query.lean) dbQuery = dbQuery.lean({ virtuals: true });
 
   const [result, totalCount] = await Promise.all([
     dbQuery,
@@ -105,10 +94,7 @@ const getPaginatedList = async function (model, query) {
   ]);
   return {
     result,
-    count: result.length,
-    next: totalCount > (query.page * query.pageSize + result.length) ? query.page + 1 : null,
     totalCount,
-    prev: (query.page >= 1) ? query.page - 1 : null
   };
 };
 
@@ -117,10 +103,12 @@ const getByQuery = async function (model, query) {
   query.populate = query.populate === false ? '' : (query.populate || metaData.populateFields);
   processQuery(model, query);
   const dbQuery = await model.find(query.findQuery).sort(query.orderBy).select(query.select).populate(...query.populate);
+  if(query.lean) dbQuery = dbQuery.lean({ virtuals: true });
   return dbQuery;
 };
 
 const addHelper = function (Schemaa) {
+  Schemaa.plugin(mongooseLeanVirtuals);
   Schemaa.index({ 'createdAt': -1 });
   Schemaa.index({ 'updatedAt': -1 });
   Schemaa.set('toObject', schemaTranslator);

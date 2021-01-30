@@ -19,7 +19,7 @@ let fields = {
       validator: function (email) {
         return validators.emailRegexChecker(email);
       },
-      message: "Email is invalid"
+      message: 'Email is invalid'
     },
     unique: [true, modelConstants.ERROR_TEMPLATES.DUPLICATE_FIELDS_NAMED.format({ field: 'Email' })],
     required: [true, modelConstants.ERROR_TEMPLATES.EMPTY_FIELD.format({ field: 'Email' })]
