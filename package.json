@@ -1,0 +1,15 @@
+{
+  "name": "campk12-classrooms-assignment",
+  "version": "0.0.1",
+  "description": "Assignment for Camp K12",
+  "main": "index.js",
+  "repository": "git@github.com:shivam-dhawan/campk12-classrooms-assignment.git",
+  "author": "Shivam Dhawan",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently \"cd  server && yarn start\" \"cd client && yarn serve\""
+  },
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
