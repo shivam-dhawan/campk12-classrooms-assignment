@@ -54,10 +54,10 @@ schema.statics.getObjByEmail = async function (email) {
 };
 
 schema.statics.checkOrCreateSuperAdmin = async function () {
-  await this.findOneOrCreate({ role: ADMIN_ROLE_SUPER }, {
+  await this.findOneOrCreate({ role: modelConstants.ADMIN_ROLE_SUPER }, {
     email: process.env.SUPER_ADMIN_EMAIL,
     password: process.env.SUPER_ADMIN_PASSWORD,
-    role: ADMIN_ROLE_SUPER
+    role: modelConstants.ADMIN_ROLE_SUPER
   });
 }
 

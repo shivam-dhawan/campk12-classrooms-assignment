@@ -3,10 +3,8 @@
 const FORMAT = require('string-format');
 FORMAT.extend(String.prototype);
 const uuidv4 = require('uuid4');
-const AutoLoad = require('fastify-autoload');
-const fastifyEnv = require('fastify-env');
 
-const { loggerOpts, dotenvOpts, rateLimitOpts, corsOpts, helmetOpts, autoloadOpts, redisOpts } = require('../configs');
+const { loggerOpts, dotenvOpts, rateLimitOpts, corsOpts, helmetOpts, autoloadOpts } = require('../configs');
 const initializeApp = async (options) => {
   options;
   const createRequestId = () => uuidv4();
@@ -16,23 +14,21 @@ const initializeApp = async (options) => {
     genReqId: createRequestId,
     ignoreTrailingSlash: true,
   });
-  fastify
-    .register(require('fastify-env'), dotenvOpts)
-    .after(() => {
-      fastify
+
+  await fastify.register(require('fastify-env'), dotenvOpts)
+  await fastify
         .register(require('fastify-blipp'))
-        .register(require('fastify-redis'), redisOpts)
-        .register(AutoLoad, autoloadOpts) // loading plugin directory here
+        .register(require('fastify-autoload'), autoloadOpts) // loading plugin directory here
         .register(require('fastify-cors'), corsOpts)
         .register(require('fastify-helmet'), helmetOpts)
         .register(require('fastify-rate-limit'), rateLimitOpts)
+        .register(require('fastify-redis'), require('../configs/redis.config.js'));
 
-      fastify.decorate('addSchemaHelper', require('./schemaHelper.utility.js'));
-      fastify.decorate('validators', require('./schemaValidator.utility.js'));
+  fastify.decorate('addSchemaHelper', require('./schemaHelper.utility.js'));
+  fastify.decorate('validators', require('./schemaValidator.utility.js'));
 
-      fastify.modelConstants = require('../constants').modelConstants;
-      global.fastify = fastify;
-    });
+  fastify.modelConstants = require('../constants').modelConstants;
+  global.fastify = fastify;
 
   const startServer = async () => {
     try {
