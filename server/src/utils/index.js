@@ -8,6 +8,7 @@ module.exports = {
   okResponse: require('./response.utility.js').okResponse,
   badResponse: require('./response.utility.js').badRequestResponse,
   errorResponse: require('./response.utility.js').errorResponse,
+  paginatedResponse: require('./response.utility.js').paginatedResponse,
   createClientError: require('./error.utility.js').createClientError,
   createServerError: require('./error.utility.js').createServerError,
   errorCodes: require('./error.utility.js').errorCodes,

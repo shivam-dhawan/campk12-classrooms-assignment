@@ -1,0 +1,333 @@
+@import "./_variables.scss";
+
+.info-text {
+  transition: all 0.15s ease-out;
+}
+
+.overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.login-form, .search-card {
+  background: white;
+  width: 50%;
+  padding: 20px;
+  margin: 0 auto;
+  box-shadow: 0px 1px 3px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+}
+
+// ------- COMMON SCSS FOR AUTH COMPONENTS --------
+
+.auth-form {
+  background-color: $main_white;
+  width: 100%;
+  border-radius: 15px;
+
+  .blue {
+    color: $secondary_blue;
+    margin: 0px 5px;
+    white-space: nowrap;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .topbar {
+    padding: 20px;
+    border-bottom: 2px solid $secondary_grey;
+    font-size: 38px;
+
+    @media screen and (max-width: 992px) {
+      font-size: 32px;
+    }
+  }
+
+  form {
+    padding: 20px 20px 40px 20px;
+    width: 60%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .row-col-cont {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+      margin-top: 10px;
+
+      @media screen and (max-width: 992px) {
+        margin-top: 20px;
+      }
+    }
+
+    .forgot-password {
+      font-size: 14px;
+      margin-bottom: 20px;
+      cursor: pointer;
+
+      &:hover {
+        text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+      }
+
+      @media screen and (max-width: 992px) {
+        margin-top: 40px;
+        margin-bottom: 0;
+      }
+    }
+
+    .btn-cont {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
+
+      .spacer {
+        margin: 0px 20px;
+      }
+
+      .gradient-btn {
+        border-radius: 15px;
+        font-size: 24px;
+        text-transform: capitalize;
+        padding: 5px 30px;
+        box-sizing: content-box;
+
+        &:hover {
+          box-shadow: 0px 1px 3px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        &.disabled {
+          background: $secondary_grey;
+
+          &:hover {
+            box-shadow: none;
+          }
+        }
+      }
+
+      .secondary-btn {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 0;
+        font-size: 24px;
+
+        &:hover {
+          text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+        }
+      }
+
+      @media screen and (max-width: 992px) {
+        flex-direction: column;
+        .spacer { margin: 15px 0 5px 0; }
+
+        .gradient-btn { 
+          width: 100%; 
+          box-sizing: border-box; 
+          padding: 0; 
+          height: 50px;
+          margin-top: 20px;
+        }
+      }
+    }
+
+    .error {
+      color: $main_red;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .success {
+      color: $secondary_green;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      border: none;
+      background-color: $secondary_grey;
+      height: 50px;
+      box-sizing: border-box;
+      padding: 10px 20px;
+      font-size: 22px;
+      &:hover {
+        box-shadow: 0px 1px 2px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      &::placeholder {
+        color: rgba(34, 34, 34, 0.3);
+      }
+
+      &:active, &:focus {
+        outline: none;
+
+        &::placeholder { color: transparent; }
+      }
+
+      &.no-bottom-margin {
+        margin-bottom: 0;
+      }
+
+      @media screen and (max-width: 992px) {
+        font-size: 18px;
+      }
+
+    }
+
+    input[type=checkbox] {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      margin-right: 5px;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: none;
+      }
+      
+      @media screen and (max-width: 992px) {
+        height: 10px;
+        width: 10px;
+      }
+    }
+
+    @media screen and (max-width: 992px) {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+}
+
+
+// --------- helper classes ---------
+.capitalize {
+  text-transform: capitalize;
+}
+
+.toUpperCase {
+  text-transform: uppercase;
+}
+
+.toLowerCase {
+  text-transform: lowercase;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-25 {
+  width: 25%;
+}
+
+.w-fit-content {
+  width: fit-content !important;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.flex {
+  display: flex;
+
+  &.centered {
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.row {
+    flex-direction: row;
+  }
+
+  &.col {
+    flex-direction: column;
+  }
+
+  &.row-rev {
+    flex-direction: row-reverse;
+  }
+
+  &.col-rev {
+    flex-direction: column-reverse;
+  }
+
+  &.flex-end {
+    align-items: flex-end;
+  }
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-center{
+  text-align: center;
+}
+
+.bold {
+  font-weight: boldest;
+}
+
+// ..........buttons
+.ant-btn,
+.btn {
+border-radius: 6px;
+height: 40px;
+padding: 8px 21px;
+font-weight: 500 !important;
+text-align: center;
+display: inline-block;
+
+@media (min-width:768px) and (max-width: 1023px) {
+  font-size:12px !important;
+}
+&:active, &:focus{
+  outline: none !important;
+}
+}
+
+.no-padding-bottom{
+.ant-form-item-label{
+  padding-bottom: 0 !important;
+}
+}
+.no-space{
+  padding:0 !important;
+  margin:0 !important;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+-webkit-appearance: none; 
+margin: 0; 
+}

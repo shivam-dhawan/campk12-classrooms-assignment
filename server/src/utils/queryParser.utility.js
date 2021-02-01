@@ -1,4 +1,7 @@
 'use strict';
+/**
+ * Parses request query to generate a mongoose find query.
+ */
 
 const queryConstants = require('../constants').queryConstants;
 
@@ -39,11 +42,11 @@ function parseQuery(model, query) {
 
   for (let key in query) {
 
-    [field, operator] = key.split('__');
+    [field, operator] = key.split(':');
     [fieldType, parent] = getFieldType(field);
 
     // Convert comma seperated values to array
-    if (['all', 'in', 'nin'].includes(operator)) {
+    if (['all', 'in', 'nin'].includes(operator) && typeof query[key] === 'string') {
       query[key] = query[key].split(',');
     }
 

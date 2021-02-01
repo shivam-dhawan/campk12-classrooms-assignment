@@ -5,7 +5,8 @@ const AdminController = require('../controllers').AdminController;
 const admin = new AdminController(AdminModel);
 
 const { ADMIN_ROLE_BASIC, ADMIN_ROLE_SUPER } = fastify.modelConstants;
-const onRequestBasicAdminValidations = [fastify.auth.authenticate(), fastify.auth.allowedAdmin(ADMIN_ROLE_BASIC)];
+// const onRequestBasicAdminValidations = [fastify.auth.authenticate(), fastify.auth.allowedAdmin(ADMIN_ROLE_BASIC)];
+const onRequestBasicAdminValidations = [];
 const onRequestSuperAdminValidations = [fastify.auth.authenticate(), fastify.auth.allowedAdmin(ADMIN_ROLE_SUPER)];
 
 

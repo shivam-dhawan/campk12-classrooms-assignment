@@ -15,6 +15,7 @@ createClientError('MISSING_TOKEN', 'You need to provide token in \'Authorization
 createClientError('INVALID_TOKEN', 'Token you\'re passing is invalid.', 401);
 createClientError('EXPIRED_TOKEN', 'Token you\'re passing is expired.', 401);
 
+createClientError('CLASS_NOT_STARTED', 'Class hasn\'t started', 403);
 createClientError('FORBIDDEN', 'You don\'t have enough permission to access this resource.', 403);
 
 createClientError('NOT_FOUND', '%s', 404);

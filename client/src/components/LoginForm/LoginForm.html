@@ -1,0 +1,7 @@
+<div class="login-form-component auth-form">
+  <form @submit="submitForm" novalidate="true">
+    <div class="error" v-show="error.length">{{error}}</div>
+    <input type="email" name="email" placeholder="Email" v-model="email"></input>
+    <button class="btn gradient-btn" type="submit">Login</button>
+  </form>
+</div>
