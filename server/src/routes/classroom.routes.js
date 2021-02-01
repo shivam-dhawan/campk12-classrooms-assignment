@@ -17,9 +17,9 @@ module.exports = function (fastify, opts, next) {
 
   fastify.post('/', { onRequest: onRequestBasicAdminValidations }, classroom.createObj);
 
-  fastify.post('/:id/join', { onRequest: onRequestBasicStudentValidations }, classroom.joinRoom);
+  fastify.post('/:roomId/join', { onRequest: onRequestBasicStudentValidations }, classroom.joinRoom);
 
-  fastify.get('/:id/reports', { onRequest: onRequestBasicAdminValidations }, classroom.getReports);
+  fastify.get('/:roomId/reports', { onRequest: onRequestBasicAdminValidations }, classroom.getReports);
 
   next();
 };

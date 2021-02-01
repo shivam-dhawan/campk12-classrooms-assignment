@@ -59,12 +59,14 @@ const processQuery = function (model, query) {
   const select = query.select || null;
   const page = Number(query.page) || 0;
   const orderBy = processOrderBy(query.orderBy || null);
-  const pageSize = Number(query.pageSize) || process.env.PAGE_SIZE || 20;
+  const pageSize = Number(query.pageSize) || Number(process.env.PAGE_SIZE) || 20;
+  const lean = query.lean || false;
   delete query.populate;
   delete query.select;
   delete query.page;
   delete query.orderBy;
   delete query.pageSize;
+  delete query.lean;
 
   const findQuery = parseQuery(model, (query.findQuery || query));
   validateFilters(model, findQuery);
@@ -75,7 +77,7 @@ const processQuery = function (model, query) {
   query.orderBy = orderBy;
   query.pageSize = pageSize;
   query.select = select;
-  query.lean = query.lean || false;
+  query.lean = lean;
 };
 
 const getPaginatedList = async function (model, query) {

@@ -5,4 +5,5 @@ module.exports = {
   StudentController: require('./student.controller.js'),
   TeacherController: require('./teacher.controller.js'),
   ClassroomController: require('./classroom.controller.js'),
+  AuthController: require('./auth.controller.js'),
 };

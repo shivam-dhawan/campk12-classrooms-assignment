@@ -22,15 +22,13 @@ let fields = {
     required: true
   },
   classId: {
-    type: String,
-    index: true,
-    sparse: true
+    type: String
   },
   userId: {
     type: Mongoose.Schema.Types.ObjectId,
     refPath: 'onUserModel',
     index: true,
-    required: true
+    sparse: true
   },
   onUserModel: {
     type: String
@@ -44,6 +42,16 @@ fastify.addSchemaHelper(schema);
 schema.virtual('event').get(function () {
   return modelConstants.CLASS_EVENT_TYPE_STR[Number(this.eventType)];
 });
+
+schema.statics.generateClassId = async function () {
+  let uniqueId, idCount;
+
+  while (true) {
+    uniqueId = fastify.hash.generateRandomString(10);
+    idCount = await this.countDocuments({ classId: uniqueId });
+    if (uniqueId && idCount === 0) return uniqueId;
+  }
+};
 
 let ClassRegisterModel = Mongoose.model('classRegister', schema);
 
