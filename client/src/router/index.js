@@ -1,22 +1,24 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import StudentPanel from '../views/StudentPanel.vue';
+import TeacherPanel from '../views/TeacherPanel.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    redirect: '/student',
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '/student',
+    name: 'StudentPanel',
+    component: StudentPanel,
+  },
+  {
+    path: '/teacher',
+    name: 'TeacherPanel',
+    component: TeacherPanel,
   },
 ];
 

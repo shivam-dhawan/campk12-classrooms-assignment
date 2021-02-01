@@ -1,0 +1,7 @@
+<div class="search-component auth-form">
+  <form @submit="joinRoom" novalidate="true">
+    <div class="error" v-show="error.length">{{error}}</div>
+    <input type="text" name="roomId" placeholder="Classroom Id" v-model="roomId"></input>
+    <button class="btn gradient-btn" type="submit">Join Room</button>
+  </form>
+</div>
