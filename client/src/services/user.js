@@ -15,8 +15,13 @@ export const joinRoom = roomId => {
   return Api.postRequest(`classroom/${roomId}/join/`, {});
 }
 
+export const getReports = roomId => {
+  return Api.getRequest(`classroom/${roomId}/reports/?pageSize=50`, {});
+}
+
 export const User = {
   userLogin,
   logoutUser,
   joinRoom,
+  getReports,
 };

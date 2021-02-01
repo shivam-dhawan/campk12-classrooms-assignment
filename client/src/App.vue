@@ -2,7 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/student">Student Panel</router-link> |
-      <router-link to="/teacher">Teacher Panel</router-link>
+      <router-link to="/teacher">Teacher Panel</router-link> |
+      <router-link to="/admin">Admin Panel</router-link>
     </div>
     <router-view />
   </div>

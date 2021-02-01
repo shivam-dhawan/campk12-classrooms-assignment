@@ -18,7 +18,7 @@ export default {
           roomId: this.roomId
         });
         this.error = '';
-        this.onSuccess(this.roomId);
+        this.onSuccess(result.data);
       } catch (err) {
         if(typeof err === 'object') err = err.message;
         this.error = err;

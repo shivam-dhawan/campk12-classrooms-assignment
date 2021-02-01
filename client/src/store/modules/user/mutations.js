@@ -16,5 +16,17 @@ export default {
   },
   unsetUserAuthToken (state) {
     state.authToken = null;
+  },
+  setStudents (state, students) {
+    state.students = students;
+  },
+  setTeachers (state, teachers) {
+    state.teachers = teachers;
+  },
+  unsetStudents (state) {
+    state.students = [];
+  },
+  unsetTeachers (state) {
+    state.teachers = [];
   }
 };

@@ -42,9 +42,18 @@ export default {
     }
   },
 
-  JOINROOM: async ({ commit }, roomId) => {
+  JOINROOM: async ({ commit }, { roomId }) => {
     try {
       const result = await User.joinRoom(roomId);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  GETREPORTS: async ({ commit }, { roomId }) => {
+    try {
+      const result = await User.getReports(roomId);
       return result;
     } catch (error) {
       throw error;

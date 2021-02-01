@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import StudentPanel from '../views/StudentPanel.vue';
 import TeacherPanel from '../views/TeacherPanel.vue';
+import AdminPanel from '../views/AdminPanel.vue';
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,11 @@ const routes = [
     path: '/teacher',
     name: 'TeacherPanel',
     component: TeacherPanel,
+  },
+  {
+    path: '/admin',
+    name: 'AdminPanel',
+    component: AdminPanel,
   },
 ];
 

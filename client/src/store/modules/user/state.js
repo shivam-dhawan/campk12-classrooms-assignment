@@ -5,5 +5,7 @@ export default {
     id: null,
     userType: null
   },
-  authToken: null
+  authToken: null,
+  students: [],
+  teachers: []
 };
