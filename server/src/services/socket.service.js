@@ -58,17 +58,19 @@ class SocketService {
   // TODO: Combine handlers into a generic one.
   async handleStudentConnected(socket, payload, roomId) {
     const user = await StudentModel.getObjByQuery({ _id: payload.userId, select: 'email', lean: true });
+    const classroomObj = await ClassroomModel.getObjByQuery({
+      roomId,
+      lean: true
+    });
+
     socket.user = {
       id: user._id,
       identifier: user.email,
       userType: USER_TYPE_STUDENT
     };
-    const classroomObj = await ClassroomModel.getObjByQuery({
-      roomId,
-      lean: true
-    });
     socket.classroomId = classroomObj._id;
     socket.classId = await fastify.redis.get(`${classroomObj._id}:classId`);
+    
     await ClassRegisterModel.createObj({
       eventType: CLASS_EVENT_TYPE_STUDENT_JOINED,
       classroomId: classroomObj._id,
@@ -76,22 +78,25 @@ class SocketService {
       onUserModel: StudentModel.modelName
     });
     await fastify.redis.sadd(`${socket.classroomId}:students`, user._id);
+
     socket.join(classroomObj._id);
-    io.in(socket.roomId).emit("userConnected", socket.user.id);
+    io.to(socket.classroomId).emit("userConnected", socket.user.id);
   }
 
   async handleTeacherConnected(socket, payload, roomId) {
     const user = await TeacherModel.getObjByQuery({ _id: payload.userId, select: 'email', lean: true });
+    const classroomObj = await ClassroomModel.getObjByQuery({
+      roomId,
+      lean: true
+    });
+
     socket.user = {
       id: user._id,
       identifier: user.email,
       userType: USER_TYPE_TEACHER
     };
-    const classroomObj = await ClassroomModel.getObjByQuery({
-      roomId,
-      lean: true
-    });
     socket.classroomId = classroomObj._id;
+    
     await ClassRegisterModel.createObj({
       eventType: CLASS_EVENT_TYPE_TEACHER_JOINED,
       classroomId: classroomObj._id,
@@ -99,8 +104,9 @@ class SocketService {
       onUserModel: TeacherModel.modelName
     });
     await fastify.redis.sadd(`${socket.classroomId}:teachers`, user._id);
+    
     socket.join(classroomObj._id);
-    io.in(socket.roomId).emit("userConnected", socket.user.id);
+    io.to(socket.classroomId).emit("userConnected", socket.user.id);
   }
 
   async handleStudentDisconnected(socket) {
@@ -111,9 +117,10 @@ class SocketService {
       userId: socket.user.id,
       onUserModel: StudentModel.modelName
     });
-    await fastify.redis.srem(`${socket.classroomId}:students`, user._id);
-    socket.leave(classroomObj._id);
-    io.in(socket.roomId).emit("userDisconnected", socket.user.id);
+    await fastify.redis.srem(`${socket.classroomId}:students`, socket.user._id);
+
+    io.to(socket.classroomId).emit("userDisconnected", socket.user.id);
+    socket.leave(socket.classroomId);
   }
 
   async handleTeacherDisconnected(socket) {
@@ -124,35 +131,52 @@ class SocketService {
       userId: socket.user.id,
       onUserModel: TeacherModel.modelName
     });
-    await fastify.redis.srem(`${socket.classroomId}:teachers`, user._id);
-    socket.leave(classroomObj._id);
-    io.in(socket.roomId).emit("userDisconnected", socket.user.id);
+    await fastify.redis.srem(`${socket.classroomId}:teachers`, socket.user._id);
+    
+    io.to(socket.classroomId).emit("userDisconnected", socket.user.id);
+    socket.leave(socket.classroomId);
   }
 
   async startClass(socket) {
-    const classId = ClassRegisterModel.generateClassId();
-    socket.classId = classId;
-    await fastify.redis.set(`${socket.classroomId}:classId`, classId);
-    await ClassRegisterModel.createObj({
-      eventType: CLASS_EVENT_TYPE_CLASS_STARTED,
-      classroomId: socket.classroomId,
-      classId: classId,
-    });
+    console.log('\n------>')
+    console.log('Start Class');
+    
+    const classExists = await fastify.redis.exists(`${socket.classroomId}:classId`);
+    if (!classExists) {
+      const classId = await ClassRegisterModel.generateClassId();
+      socket.classId = classId;
+      
+      await fastify.redis.set(`${socket.classroomId}:classId`, classId);
+      await ClassRegisterModel.createObj({
+        eventType: CLASS_EVENT_TYPE_CLASS_STARTED,
+        classroomId: socket.classroomId,
+        classId: classId,
+      });
+    }
   }
 
   async endClass(socket) {
-    await ClassRegisterModel.createObj({
-      eventType: CLASS_EVENT_TYPE_CLASS_ENDED,
-      classroomId: socket.classroomId,
-      classId: socket.classId,
-    });
-    await fastify.redis.del(`${socket.classroomId}:classId`);
-    io.in(socket.roomId).emit("classEnded");
+    console.log('\n------>')
+    console.log('End Class');
+    
+    const classExists = await fastify.redis.exists(`${socket.classroomId}:classId`);
+    if (classExists) {
+      await ClassRegisterModel.createObj({
+        eventType: CLASS_EVENT_TYPE_CLASS_ENDED,
+        classroomId: socket.classroomId,
+        classId: socket.classId,
+      });
+      await fastify.redis.del(`${socket.classroomId}:classId`);
+    } 
+    io.to(socket.classroomId).emit("classEnded");
   }
   async disconnect(socket) {
+    console.log('\n------>');
+    console.log('Disconnect');
+    
     if (socket.user && socket.classroomId) {
       if(socket.user.userType === USER_TYPE_STUDENT)
-        await handleStudentDisconnected(socket);
+        await this.handleStudentDisconnected(socket);
       else if(socket.user.userType === USER_TYPE_TEACHER)
         await this.handleTeacherDisconnected(socket);
     }

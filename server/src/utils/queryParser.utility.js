@@ -46,7 +46,7 @@ function parseQuery(model, query) {
     [fieldType, parent] = getFieldType(field);
 
     // Convert comma seperated values to array
-    if (['all', 'in', 'nin'].includes(operator)) {
+    if (['all', 'in', 'nin'].includes(operator) && typeof query[key] === 'string') {
       query[key] = query[key].split(',');
     }
 

@@ -10,9 +10,9 @@ const USER_TYPE_STUDENT = 2;
 const USER_TYPE_TEACHER = 3;
 const USER_TYPE_ENUM = [USER_TYPE_ADMIN, USER_TYPE_STUDENT, USER_TYPE_TEACHER];
 const USER_TYPE_STR_MAPPER = {
-  'admins': 1,
-  'students': 2,
-  'teachers': 3
+  'admin': 1,
+  'student': 2,
+  'teacher': 3
 };
 
 const ADMIN_ROLE_BASIC = 10;

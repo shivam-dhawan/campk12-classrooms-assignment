@@ -8,7 +8,7 @@ const { ADMIN_ROLE_BASIC, ADMIN_ROLE_SUPER, USER_TYPE_STUDENT } = fastify.modelC
 // const onRequestBasicAdminValidations = [fastify.auth.authenticate(), fastify.auth.allowedAdmin(ADMIN_ROLE_BASIC)];
 // const onRequestBasicStudentValidations = [fastify.auth.authenticate(), fastify.auth.allowedUsers(USER_TYPE_STUDENT)];
 const onRequestBasicAdminValidations = [];
-const onRequestBasicStudentValidations = [];
+const onRequestBasicStudentValidations = [fastify.auth.authenticate()];
 
 
 module.exports = function (fastify, opts, next) {

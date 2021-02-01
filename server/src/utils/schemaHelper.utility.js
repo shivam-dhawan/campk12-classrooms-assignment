@@ -104,9 +104,9 @@ const getByQuery = async function (model, query) {
   const metaData = model.metaData();
   query.populate = query.populate === false ? '' : (query.populate || metaData.populateFields);
   processQuery(model, query);
-  const dbQuery = await model.find(query.findQuery).sort(query.orderBy).select(query.select).populate(...query.populate);
+  let dbQuery = model.find(query.findQuery).sort(query.orderBy).select(query.select).populate(...query.populate);
   if(query.lean) dbQuery = dbQuery.lean({ virtuals: true });
-  return dbQuery;
+  return await dbQuery;
 };
 
 const addHelper = function (Schemaa) {

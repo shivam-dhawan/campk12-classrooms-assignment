@@ -28,7 +28,7 @@ const initializeApp = async (options) => {
   fastify.decorate('addSchemaHelper', require('./schemaHelper.utility.js'));
   fastify.decorate('validators', require('./schemaValidator.utility.js'));
   
-  const socketIO = require('socket.io')(fastify.server, { origins: '*:*' });
+  const socketIO = require('socket.io')(fastify.server);
   const redisAdapter = require('socket.io-redis');
   socketIO.adapter(redisAdapter({ host: redisConfig.host, port: redisConfig.port }));
   fastify.socket = socketIO;
