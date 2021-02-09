@@ -10,15 +10,17 @@
         <div class="flex row">
           <div class="w-50">
             Students:
-            <div v-for="student in students" :key="student.id" class="mb-10">
+            {{ students }}
+            <!-- <div v-for="(student, idx) in students" :key="idx" class="mb-10">
               {{ student.email }}
-            </div>
+            </div> -->
           </div>
           <div class="w-50">
             Teachers:
-            <div v-for="teacher in teachers" :key="teacher.id" class="mb-10">
+            {{ teachers }}
+            <!-- <div v-for="(teacher, idx) in teachers" :key="idx" class="mb-10">
               {{ teacher.email }}
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -47,6 +49,9 @@ export default {
       socket: null,
       roomId: null,
     };
+  },
+  beforeDestroy() {
+    if (this.socket) this.socket.close();
   },
   computed: {
     USER_TYPE_STUDENT() {
@@ -77,14 +82,20 @@ export default {
     },
     bindEvents() {
       this.socket.on("classEnded", () => {
-        console.log("Class Ended");
+        alert("Class Ended");
+        this.$store.commit("unsetUserProfile");
+        this.$store.commit("unsetUserAuthToken");
       });
       this.socket.on("userConnected", (data) => {
         console.log("Connected: ", data);
+        if (data.userType === USER_TYPE_STUDENT)
+          this.$store.commit("addStudent", data);
         // Add this user to the list
       });
       this.socket.on("userDisconnected", (data) => {
         console.log("Disconnected: ", data);
+        if (data.userType === USER_TYPE_STUDENT)
+          this.$store.commit("removeStudent", data);
         // Remove this user from the list
       });
     },

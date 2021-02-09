@@ -14,15 +14,17 @@
         <div class="flex row">
           <div class="w-50">
             Students:
-            <div v-for="student in students" :key="student.id" class="mb-10">
+            {{ students }}
+            <!-- <div v-for="(student, idx) in students" :key="idx" class="mb-10">
               {{ student.email }}
-            </div>
+            </div> -->
           </div>
           <div class="w-50">
             Teachers:
-            <div v-for="teacher in teachers" :key="teacher.id" class="mb-10">
+            {{ teachers }}
+            <!-- <div v-for="(teacher, idx) in teachers" :key="idx" class="mb-10">
               {{ teacher.email }}
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -37,7 +39,7 @@
 import LoginForm from "../components/LoginForm/LoginForm.vue";
 import SearchCard from "../components/SearchCard/SearchCard.vue";
 import getSocketInstance from "../utils/getSocketInstance.js";
-import { USER_TYPE_TEACHER } from "../constants";
+import { USER_TYPE_TEACHER, USER_TYPE_STUDENT } from "../constants";
 
 export default {
   name: "TeacherPanel",
@@ -52,9 +54,15 @@ export default {
       roomId: null,
     };
   },
+  beforeDestroy() {
+    if (this.socket) this.socket.close();
+  },
   computed: {
     USER_TYPE_TEACHER() {
       return USER_TYPE_TEACHER;
+    },
+    USER_TYPE_STUDENT() {
+      return USER_TYPE_STUDENT;
     },
     teacher() {
       const user = this.$store.state.user.userProfile;
@@ -81,15 +89,20 @@ export default {
     },
     bindEvents() {
       this.socket.on("classEnded", () => {
-        console.log("Class Ended");
+        alert("Class Ended");
+        this.$store.commit("unsetUserProfile");
+        this.$store.commit("unsetUserAuthToken");
       });
       this.socket.on("userConnected", (data) => {
         console.log("Connected: ", data);
-        // Add this user to the list
+        if (data.userType === USER_TYPE_STUDENT)
+          this.$store.commit("addStudent", data);
+        else this.$store.commit("addTeacher", data);
       });
       this.socket.on("userDisconnected", (data) => {
         console.log("Disconnected: ", data);
-        // Remove this user from the list
+        if (data.userType === USER_TYPE_STUDENT)
+          this.$store.commit("removeStudent", data);
       });
     },
     startClass() {
