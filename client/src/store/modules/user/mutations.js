@@ -28,5 +28,22 @@ export default {
   },
   unsetTeachers (state) {
     state.teachers = [];
-  }
+  },
+  addStudent(state, student) {
+    const oldState = state.students;
+    if(!oldState.some(user => user.id === student.id))
+      oldState.push(student);
+    state.students = oldState;
+  },
+  removeStudent(state, student) {
+    const index = state.students.findIndex(function(user){ return user.id === student.id; });
+    if(index >= 0)
+      state.students.splice(index, 1);
+  },
+  addTeacher(state, teacher) {
+    const oldState = state.teachers;
+    if(!oldState.some(user => user.id === teacher.id))
+      oldState.push(teacher);
+    state.teachers = oldState;
+  },
 };

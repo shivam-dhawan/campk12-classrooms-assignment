@@ -80,7 +80,7 @@ class SocketService {
     await fastify.redis.sadd(`${socket.classroomId}:students`, user._id);
 
     socket.join(classroomObj._id);
-    io.to(socket.classroomId).emit("userConnected", socket.user.id);
+    io.emit("userConnected", socket.user);
   }
 
   async handleTeacherConnected(socket, payload, roomId) {
@@ -106,7 +106,7 @@ class SocketService {
     await fastify.redis.sadd(`${socket.classroomId}:teachers`, user._id);
     
     socket.join(classroomObj._id);
-    io.to(socket.classroomId).emit("userConnected", socket.user.id);
+    io.emit("userConnected", socket.user);
   }
 
   async handleStudentDisconnected(socket) {
@@ -119,7 +119,7 @@ class SocketService {
     });
     await fastify.redis.srem(`${socket.classroomId}:students`, socket.user._id);
 
-    io.to(socket.classroomId).emit("userDisconnected", socket.user.id);
+    io.emit("userDisconnected", socket.user);
     socket.leave(socket.classroomId);
   }
 
@@ -133,7 +133,7 @@ class SocketService {
     });
     await fastify.redis.srem(`${socket.classroomId}:teachers`, socket.user._id);
     
-    io.to(socket.classroomId).emit("userDisconnected", socket.user.id);
+    io.emit("userDisconnected", socket.user);
     socket.leave(socket.classroomId);
   }
 
@@ -168,7 +168,7 @@ class SocketService {
       });
       await fastify.redis.del(`${socket.classroomId}:classId`);
     } 
-    io.to(socket.classroomId).emit("classEnded");
+    io.emit("classEnded");
   }
   async disconnect(socket) {
     console.log('\n------>');

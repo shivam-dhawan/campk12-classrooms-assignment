@@ -19,6 +19,10 @@ class ClassroomController extends BaseAppController {
       fastify.redis.smembers(`${classroomObj._id}:teachers`)
     ]);
 
+    if(request.user.userType === fastify.modelConstants.USER_TYPE_TEACHER && 
+        teacherIds.length > 0 && !teacherIds.includes(request.user.userId))
+      throw new fastify.errorCodes['NOT_ALLOWED']('Class has already started');
+
     const [students, teachers] = await Promise.all([
       StudentModel.getList({ '_id:in': studentIds, select: 'email', lean: true }),
       TeacherModel.getList({ '_id:in': teacherIds, select: 'email', lean: true })
