@@ -167,6 +167,8 @@ class SocketService {
         classId: socket.classId,
       });
       await fastify.redis.del(`${socket.classroomId}:classId`);
+      await fastify.redis.del(`${socket.classroomId}:students`);
+      await fastify.redis.del(`${socket.classroomId}:teachers`);
     } 
     io.emit("classEnded");
   }
